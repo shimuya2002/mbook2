@@ -99,7 +99,7 @@ class Transaction {
     newT.note=this.note;
     return newT;
   }
-  static Transaction? create_from_csv(String sourceString) {
+  static Transaction create_from_csv(String sourceString) {
     var params = sourceString.split(",");
     if (1 < params.length) {
       var t = Transaction();
@@ -118,7 +118,7 @@ class Transaction {
     }else{
       throw FormatException("Invalid format:$sourceString");
     }
-    return null;
+
   }
 
 

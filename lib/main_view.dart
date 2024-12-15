@@ -456,7 +456,7 @@ class _MainViewState extends State<MainView> {
     var list=await DataHelper().getAllData();
     var csv="";
     for(var t in list){
-      csv+="${t.toCSVString()}\n";
+      csv+="${t.toCSVString()}\r\n";
     }
 
 
@@ -552,7 +552,9 @@ class _MainViewState extends State<MainView> {
       await Navigator.of(context).push(MaterialPageRoute(builder: (context) {
         return EditTransaction(t, title: "");
       })).then((value) => setState(() {
-        DataHelper().add(value);
+        if(null!=value) {
+          DataHelper().add(value);
+        }
       }));
     }catch( e){
       print(e);

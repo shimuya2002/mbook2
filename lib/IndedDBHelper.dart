@@ -121,7 +121,11 @@ class IndexdedDBHelper {
 
           var value = ((await dataStore.getObject(id)) as String);
 
-          result.add(mbook2.Transaction.create_from_csv(value)!);
+          try {
+            result.add(mbook2.Transaction.create_from_csv(value)!);
+          }on FormatException catch(e){
+            print(e.message);
+          }
 
         }
       }
@@ -134,6 +138,7 @@ class IndexdedDBHelper {
   }
 
   Future<void> setData(mbook2.Transaction t) async {
+    //print(t.toCSVString());
     var db = await database;
     var txn = db!.transactionList(
         [DATA_STORE_NAME, SEARCH_STORE_NAME], idbModeReadWrite);
@@ -142,14 +147,17 @@ class IndexdedDBHelper {
     var oldObj = await dataStore.getObject(t.tid);
     if (null != oldObj) {
 
-      print(oldObj as String);
-      var oldTran = mbook2.Transaction.create_from_csv(oldObj as String)!;
-      await _removeFromSearchTbl(searchStore, oldTran.tDate, t.tid);
+
+      try {
+        var oldTran = mbook2.Transaction.create_from_csv(oldObj as String)!;
+        await _removeFromSearchTbl(searchStore, oldTran.tDate, t.tid);
+      }on FormatException catch(e){
+        print(e.message);
+      }
     }
 
 
     await _putToSearchTbl(searchStore, t.tDate, t.tid);
-    //print(t.tDate);
 
 
     await dataStore.put(t.toCSVString(), t.tid);
@@ -195,7 +203,12 @@ class IndexdedDBHelper {
         newSearchTbl.add(k);
       }
     }
-    await searchStore.put(newSearchTbl.join(","), tDate.toIso8601String());
+    if(newSearchTbl.isEmpty){
+      await searchStore.delete(tDate.toIso8601String());
+    }else {
+      await searchStore.put( newSearchTbl.join(","),
+          tDate.toIso8601String());
+    }
   }
 
   Future<void> _putToSearchTbl(ObjectStore searchStore, DateTime tDate,
@@ -205,12 +218,15 @@ class IndexdedDBHelper {
 
     var searchList = [tID];
     if (null != newSearchKeyTbl) {
-      searchList = (newSearchKeyTbl as String).split(",");
-      searchList.add(tID);
+      var curList = (newSearchKeyTbl as String).split(",");
+      if(curList.isNotEmpty) {
+        searchList=curList;
+        searchList.add(tID);
+      }
 
     }
-
-    await searchStore.put(searchList.join(","), tDate.toIso8601String());
+    //print("put length=${searchList.length} ${searchList.join(",")}");
+    await searchStore.put(1==searchList.length?searchList[0]:searchList.join(","), tDate.toIso8601String());
   }
   Future<void> setMethods(List<String> mList) async{
     var db = await database;
