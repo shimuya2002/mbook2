@@ -82,10 +82,9 @@ class IndexdedDBHelper {
     var dataStore = dataTxn.objectStore(DATA_STORE_NAME);
     var data = await dataStore.getAll();
     var result = List<mbook2.Transaction>.empty(growable: true);
-    if (null != data) {
+
       for (var t in data) {
-        result.add(mbook2.Transaction.create_from_csv(t as String)!);
-      }
+        result.add(mbook2.Transaction.create_from_csv(t as String));
     }
     await dataTxn.completed;
 
@@ -122,7 +121,7 @@ class IndexdedDBHelper {
           var value = ((await dataStore.getObject(id)) as String);
 
           try {
-            result.add(mbook2.Transaction.create_from_csv(value)!);
+            result.add(mbook2.Transaction.create_from_csv(value));
           }on FormatException catch(e){
             print(e.message);
           }
@@ -149,7 +148,7 @@ class IndexdedDBHelper {
 
 
       try {
-        var oldTran = mbook2.Transaction.create_from_csv(oldObj as String)!;
+        var oldTran = mbook2.Transaction.create_from_csv(oldObj as String);
         await _removeFromSearchTbl(searchStore, oldTran.tDate, t.tid);
       }on FormatException catch(e){
         print(e.message);
@@ -172,7 +171,7 @@ class IndexdedDBHelper {
     for (var t in tList) {
       var oldObj = (await dataStore.getObject(t.tid));
       if (null != oldObj) {
-        var oldT = mbook2.Transaction.create_from_csv(oldObj as String)!;
+        var oldT = mbook2.Transaction.create_from_csv(oldObj as String);
         await _removeFromSearchTbl(searchStore, oldT.tDate, t.tid);
       }
 

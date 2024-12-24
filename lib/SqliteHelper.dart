@@ -194,7 +194,7 @@ class SqliteHelper{
 
     //Log.i("test",t.toString());
 
-    txn.insert(_moneybook_tbl_name,{_moneybook_primary_key:t.tid,_value_key:t.toCSVString()});
+    txn.insert(_moneybook_tbl_name,{_moneybook_primary_key:t.tid,_value_key:'"${t.toCSVString()}"'});
     //Log.i("test",String.format("Insert result %d",r));
 
 
@@ -250,7 +250,7 @@ class SqliteHelper{
 
 
     for(var i in cursor){
-      r.add(Transaction.create_from_csv(i[_value_key] as String)!);
+      r.add(Transaction.create_from_csv(i[_value_key] as String));
     }
     return r;
   }

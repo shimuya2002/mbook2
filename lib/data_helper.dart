@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
+
 
 import 'package:uuid/uuid.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io' as io;
 import 'package:mbook2/transaction.dart' as mbook2;
 import 'package:mbook2/SqliteHelper.dart';
-import 'package:mbook2/transaction.dart' as mbook2;
+
 import 'package:mbook2/IndedDBHelper.dart';
 import 'package:mbook2/FireStoreHelper.dart';
 class DataHelper{
@@ -123,7 +123,7 @@ class DataHelper{
               if ("methods" != k && "usages" != k &&
                   Uuid.isValidUUID(fromString: k)) {
                 result.add(
-                    mbook2.Transaction.create_from_csv(prefs.getString(k)!!)!);
+                    mbook2.Transaction.create_from_csv(prefs.getString(k)!));
               }
             }
 
@@ -171,11 +171,11 @@ class DataHelper{
 
                 var kDate = DateTime.parse(k).toUtc();
                 if (0 >= bUTC.compareTo(kDate) && 0 < eUTC.compareTo(kDate)) {
-                  var uuidTbl = prefs.getStringList(k)!!;
+                  var uuidTbl = prefs.getStringList(k)!;
 
                   for (var uuid in uuidTbl) {
                     var t = mbook2.Transaction.create_from_csv(
-                        prefs.getString(uuid)!!)!;
+                        prefs.getString(uuid)!);
                     result.add(t);
                   }
                 }
@@ -214,12 +214,12 @@ class DataHelper{
             var searchTbl = [t.tid];
             if (prefs.containsKey(t.tid)) {
               var oldT = mbook2.Transaction.create_from_csv(
-                  prefs.getString(t.tid)!!)!;
+                  prefs.getString(t.tid)!);
               var oldUtc = oldT.tDate.toUtc();
               var oldKey = oldUtc.toIso8601String();
 
               if (prefs.containsKey(oldKey)) {
-                var oldTbl = prefs.getStringList(oldKey)!!;
+                var oldTbl = prefs.getStringList(oldKey)!;
                 oldTbl.remove(t.tid);
                 await prefs.setStringList(oldKey, oldTbl);
               }
@@ -264,10 +264,10 @@ class DataHelper{
             for (var t in tList) {
               if (prefs.containsKey(t.tid)) {
                 var tOld = mbook2.Transaction.create_from_csv(
-                    prefs.getString(t.tid)!!)!;
+                    prefs.getString(t.tid)!);
                 var kOldDate = tOld.tDate.toUtc().toIso8601String();
                 if (prefs.containsKey(kOldDate)) {
-                  var dList = prefs.getStringList(kOldDate)!!;
+                  var dList = prefs.getStringList(kOldDate)!;
                   dList.remove(t.tid);
                   prefs.setStringList(kOldDate, dList);
                 } else {
@@ -279,7 +279,7 @@ class DataHelper{
               var kDate = t.tDate.toUtc().toIso8601String();
               var tList = [t.tid];
               if (prefs.containsKey(kDate)) {
-                tList = prefs.getStringList(kDate)!!;
+                tList = prefs.getStringList(kDate)!;
                 tList.add(t.tid);
               }
               await prefs.setStringList(kDate, tList);
@@ -318,7 +318,7 @@ class DataHelper{
             var utcDate = t.tDate.toUtc();
             var ymDate = utcDate.toIso8601String();
             if (prefs.containsKey(ymDate)) {
-              var searchTbl = prefs.getStringList(ymDate)!!;
+              var searchTbl = prefs.getStringList(ymDate)!;
               searchTbl.remove(t.tid);
               await prefs.setStringList(ymDate, searchTbl);
             }

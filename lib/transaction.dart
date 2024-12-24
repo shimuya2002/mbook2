@@ -1,15 +1,19 @@
 
 
 
+
+
 import 'package:intl/intl.dart';
 
 import 'package:uuid/uuid.dart';
 
 
-abstract class _Currency{
+
+
+abstract class Currency{
   var value=0.0;
 
-  _Currency(v)
+  Currency(double v)
   {
     value=v;
   }
@@ -18,29 +22,39 @@ abstract class _Currency{
 
 
 
-
-  static _Currency parse(String sourceString){
-    if(sourceString.length>_JPY.syb.length &&
-        _JPY.syb==sourceString.substring(0,_JPY.syb.length)){
-      return _JPY(double.parse(sourceString.substring(_JPY.syb.length)));
+  static Currency parse(String sourceString){
+    if(sourceString.length>JPY.syb.length &&
+        JPY.syb==sourceString.substring(0,JPY.syb.length)){
+      return JPY(double.parse(sourceString.substring(JPY.syb.length)));
     }
-    return _JPY(double.parse(sourceString));
+    return JPY(double.parse(sourceString));
 
   }
 
-  _Currency clone();
+  factory Currency.fromJSON(Map<String,dynamic> json){
+    return Currency.parse(json["value"]);
+  }
+  Currency clone();
+
 }
-class _JPY extends _Currency{
+
+class JPY extends Currency{
+
   static const syb="￥";
-  _JPY(super.v);
+
+
+  JPY(super.v);
+
+
 
   @override String toString(){
     return "$syb$value";
   }
   @override
-  _Currency clone(){
-    return _JPY(this.value);
+  Currency clone(){
+    return JPY(this.value);
   }
+
 
 }
 enum STORAGE_MODE{
@@ -48,9 +62,17 @@ enum STORAGE_MODE{
   MODE_FIRESTORE,
   MODE_INDEDEXDB,
 }
+enum OUTPUT_FORMAT{
+  FMT_CSV,
+  FMT_JSON
+}
+
 class Transaction {
+
   static final STORAGE_MODE storageMode=STORAGE_MODE.MODE_INDEDEXDB;
+  static final OUTPUT_FORMAT fmtMode=OUTPUT_FORMAT.FMT_JSON;//OUTPUT_FORMAT.FMT_CSV;
   static final _uuid = Uuid();
+
   static final DateFormat _t_format = DateFormat.Hm(Intl.systemLocale);
 
 
@@ -60,7 +82,7 @@ class Transaction {
   String method = "";
   String usage = "";
 
-  _Currency _value = _JPY(0.0);
+  Currency _value = JPY(0.0);
   String note = "";
 
 
@@ -73,7 +95,7 @@ class Transaction {
     t.tDate=_tDate;
     t.method=_method;
     t.usage=_usage;
-    t._value=_Currency.parse(value);
+    t._value=Currency.parse(value);
     t.note=_note;
     return t;
   }
@@ -86,6 +108,28 @@ class Transaction {
     return "$tid,${tDate.toIso8601String()},$method,$usage,$_value,$note";
   }
 
+  factory Transaction.fromJson(Map<String,dynamic> json){
+    var t=Transaction();
+    t.tid=json["tid"];
+    t.tDate=DateTime.parse(json["tdate"]);
+    t.method=json["method"];
+    t.usage=json["usage"];
+    t._value=Currency.parse(json["value"]);
+    t.note=json["note"];
+    return t;
+
+
+  }
+  Map<String,dynamic> toJson(){
+    return {
+      "tid":tid,
+      "tdate":tDate.toIso8601String(),
+      "method":method,
+      "usage":usage,
+      "value":_value.toString(),
+      "note":note
+    };
+  }
   double get_value() {
     return _value.value;
   }
@@ -112,7 +156,7 @@ class Transaction {
 
       t.method = params[2];
       t.usage = params[3];
-      t._value = _Currency.parse(params[4]);
+      t._value = Currency.parse(params[4]);
       t.note = params[5];
       return t;
     }else{

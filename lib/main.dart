@@ -1,10 +1,12 @@
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mbook2/main_view_data.dart';
+import 'package:mbook2/main_view_nav_state.dart';
 import 'package:mbook2/transaction.dart' as mbook2;
 import 'main_view.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'main_view4.dart';
+import 'package:provider/provider.dart';
 void main() async{
   print("kISWeb=$kIsWeb");
   if(mbook2.STORAGE_MODE.MODE_FIRESTORE==mbook2.Transaction.storageMode) {
@@ -40,7 +42,12 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MainView(title: 'Flutter Demo Home Page'),
+      home:MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+                create: (BuildContext context) => MainViewNavState()),
+            ChangeNotifierProvider(create: (_) => MainViewDataState(DateTime.now()))
+          ],child:MainView4(),),
     );
   }
 }

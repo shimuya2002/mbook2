@@ -1,12 +1,13 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mbook2/data_helper.dart';
 
-import 'package:uuid/uuid.dart';
+
+
+
 import 'transaction.dart';
 import 'size_config.dart';
 import 'edit_view.dart';
@@ -21,6 +22,7 @@ import 'package:external_path/external_path.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 import 'package:charset_converter/charset_converter.dart';
+
 class MainView extends StatefulWidget {
   const MainView({super.key, required this.title});
 
@@ -41,6 +43,7 @@ class MainView extends StatefulWidget {
 
 class _MainViewState extends State<MainView> {
 
+
   var _cur_tab = 0;
 
   var _total_value=0.0;
@@ -48,14 +51,22 @@ class _MainViewState extends State<MainView> {
   var _sel_list=[];
   DateTimeRange _target_date_range=DateTimeRange(start: DateTime.now(), end: DateTime.now());
   DateTime _cur_date=DateTime.now();
+
+
+
+
+
   static final DateFormat DAY_FMT=DateFormat("yyyy/MM/dd");
   var _version="";
   var _buildNumber="";
 
+
   static final _mizuho_date_fmt=DateFormat("yyyy.MM.dd");
+
 
   _MainViewState(){
     set_cur_date(_cur_date);
+
    }
 
   void getVer() async {
@@ -79,6 +90,7 @@ class _MainViewState extends State<MainView> {
   Widget build(BuildContext context) {
 
     SizeConfig().init(context);
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -96,7 +108,11 @@ class _MainViewState extends State<MainView> {
               .inversePrimary,
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
-          title: 0==_cur_tab?Text(_sel_list.isEmpty?"${DAY_FMT.format(_cur_date)}":"Total $_total_value"): Text(widget.title),
+          title: Text( 0==_cur_tab?
+          (_sel_list.isEmpty?
+          "${DAY_FMT.format(_cur_date)}":
+          "Total $_total_value"):
+          widget.title),
         ),
 
         body:Column(
@@ -263,6 +279,7 @@ class _MainViewState extends State<MainView> {
         if(null!=value) {
           DataHelper().add(value);
           set_cur_date(value.tDate.toLocal());
+
         }
       }));
     }catch( e){
@@ -276,6 +293,7 @@ class _MainViewState extends State<MainView> {
     _sel_list=[];
     _total_value=0;
     setState(() {
+
 
 
     });
@@ -331,9 +349,13 @@ class _MainViewState extends State<MainView> {
     ];
   }
   List<Widget> gen_content_view(){
+
     switch(_cur_tab) {
       case 0:
         {
+
+
+
           return [gen_list()];
         }
       case 1:
@@ -342,6 +364,7 @@ class _MainViewState extends State<MainView> {
         }
       case 3:
         {
+
           return [
             _gen_config()
           ];
@@ -395,52 +418,72 @@ class _MainViewState extends State<MainView> {
     if (file != null) {
 
       var db=DataHelper();
-      final String str_data = kIsWeb?await file.readAsString(encoding: utf8):
-      (await CharsetConverter.decode("UTF-8", (await file.readAsBytes())));
       var methods = await db.get_method_list();
       var usages = await db.get_usage_list();
       var tranList = List<Transaction>.empty(growable: true);
       var mAddList = List<String>.empty(growable: true);
       var uAddList = List<String>.empty(growable: true);
-      var rows = str_data.split("\n");
+      final String str_data = kIsWeb
+          ? await file.readAsString(encoding: utf8)
+          :
+      (await CharsetConverter.decode("UTF-8", (await file.readAsBytes())));
+      if("csv"==file.name.substring(file.name.lastIndexOf(".")+1)) {
 
-      if(rows.isNotEmpty && !rows[0].startsWith("支店名")) {
-        for (var line in rows) {
-          var obj = Transaction.create_from_csv(line);
-          if (null != obj) {
-            tranList.add(obj);
 
-            if (!methods.contains(obj.method) &&
-                !mAddList.contains(obj.method)) {
-              mAddList.add(obj.method);
+        var rows = str_data.split("\n");
+
+        if (rows.isNotEmpty && !rows[0].startsWith("支店名")) {
+          for (var line in rows) {
+            var obj = Transaction.create_from_csv(line);
+            if (null != obj) {
+              tranList.add(obj);
+
+              if (!methods.contains(obj.method) &&
+                  !mAddList.contains(obj.method)) {
+                mAddList.add(obj.method);
+              }
+              if (!usages.contains(obj.usage) &&
+                  !uAddList.contains(obj.usage)) {
+                uAddList.add(obj.usage);
+              }
             }
-            if (!usages.contains(obj.usage) &&
-                !uAddList.contains(obj.usage)) {
-              uAddList.add(obj.usage);
+          }
+        } else {
+          for (var i = 13; i < rows.length; ++i) {
+            var line = rows[i];
+
+
+            var params = line.split(",");
+
+            //log("length=${params.length} $line");
+            if (1 == params.length)
+              continue;
+            var value = "";
+            var date = _mizuho_date_fmt.parse(params[1]);
+            if (params[2].isEmpty) {
+              value = params[3];
+            } else {
+              value = "-${params[2]}";
             }
+            var note = params[4];
+
+            var t = Transaction.create(date, "", "", value, note);
+            tranList.add(t);
           }
         }
-      }else{
-        for(var i=10;i < rows.length;++i){
-          var line=rows[i];
-
-
-          var params=line.split(",");
-
-          //log("length=${params.length} $line");
-          if(1==params.length)
-            continue;
-          var value="";
-          var date=_mizuho_date_fmt.parse(params[1]);
-          if(params[2].isEmpty){
-            value=params[3];
-          }else{
-            value="-${params[2]}";
+      }else {
+        List<dynamic> json = jsonDecode(str_data);
+        for (var i in json) {
+          var obj = Transaction.fromJson(i);
+          tranList.add(obj);
+          if (!methods.contains(obj.method) &&
+              !mAddList.contains(obj.method)) {
+            mAddList.add(obj.method);
           }
-          var note=params[4];
-
-          var t=Transaction.create( date, "", "",value, note);
-          tranList.add(t);
+          if (!usages.contains(obj.usage) &&
+              !uAddList.contains(obj.usage)) {
+            uAddList.add(obj.usage);
+          }
         }
       }
 
@@ -455,16 +498,30 @@ class _MainViewState extends State<MainView> {
   void _on_export_file() async {
     var list=await DataHelper().getAllData();
     var csv="";
-    for(var t in list){
-      csv+="${t.toCSVString()}\r\n";
+    if(OUTPUT_FORMAT.FMT_CSV== Transaction.fmtMode) {
+      for (var t in list) {
+        csv += "${t.toCSVString()}\n";
+      }
+    }else{
+
+
+      csv=jsonEncode(list);
     }
 
 
     if (kIsWeb) {
 
       final anchor = html.AnchorElement(
-          href: "data:text/csv;charset=utf-8,$csv");
-      anchor.download = "moneybook.csv";
+          href: OUTPUT_FORMAT.FMT_CSV==Transaction.fmtMode?
+            "data:text/csv;charset=utf-8,$csv":
+          "data:text/json;charset=utf-8,$csv"
+      );
+      if(OUTPUT_FORMAT.FMT_CSV==Transaction.fmtMode) {
+        anchor.download = "moneybook.csv";
+      }else{
+        anchor.download = "moneybook.json";
+
+      }
       anchor.click();
     }else {
       if (io.Platform.isAndroid) {
@@ -512,8 +569,12 @@ class _MainViewState extends State<MainView> {
               }
 
             }
-            return Column(children:[
-              Text("In $inValue Out ${outValue.abs()}"),
+            return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children:[
+              Text("In $inValue",style:TextStyle(fontSize:24)),
+
+              Text("Out ${outValue.abs()}",style:TextStyle(fontSize:24)),
               SizedBox(height: SizeConfig.blockSizeVertical * 70, child:
             ListView.builder(itemCount: snapshot.data!.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -554,6 +615,7 @@ class _MainViewState extends State<MainView> {
       })).then((value) => setState(() {
         if(null!=value) {
           DataHelper().add(value);
+          set_cur_date((value as Transaction).tDate.toLocal());
         }
       }));
     }catch( e){

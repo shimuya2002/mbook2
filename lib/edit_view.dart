@@ -54,6 +54,9 @@ class _EditTransactionState extends State<EditTransaction> {
         _controller.text=this.widget.target!.note;
       }
     }
+    if(null!=widget.target && 0>widget.target!.get_value()){
+      _type=1;
+    }
     SizeConfig().init(context);
 
 
@@ -421,7 +424,7 @@ class _EditTransactionState extends State<EditTransaction> {
         lastDate: DateTime(curDate.year + 1));
     if (null != datePicked) {
       setState(() {
-        _date_time= DateTime(datePicked!.year,datePicked!.month,datePicked!.day,curDate.hour,curDate.minute);
+        _date_time= DateTime(datePicked.year,datePicked.month,datePicked.day,curDate.hour,curDate.minute);
       });
     }
   }

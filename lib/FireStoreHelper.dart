@@ -1,5 +1,5 @@
 
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mbook2/transaction.dart' as mbook2;
 class FireStoreHelper{
