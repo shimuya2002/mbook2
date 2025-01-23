@@ -42,7 +42,9 @@ class MainView4 extends StatelessWidget {
                     .inversePrimary,
                 // Here we take the value from the MyHomePage object that was created by
                 // the App.build method, and use it to set our appbar title.
-                title: MainViewTitle2(nav_state,data_state)),
+                title: MainViewTitle2(nav_state,data_state),
+                leading: _gen_leading(nav_state),
+            ),
             body: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +52,7 @@ class MainView4 extends StatelessWidget {
                 ),
             bottomNavigationBar:
                MainViewNavBar2(nav_state),
-            drawer:  MainViewMenu2(nav_state,data_state),
+            drawer:  _gen_menu(nav_state, data_state),
             floatingActionButton: _gen_float_action_btn(context,nav_state,data_state),
           );
         }
@@ -64,6 +66,12 @@ class MainView4 extends StatelessWidget {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       );
+    }
+    return null;
+  }
+  Widget? _gen_menu(MainViewNavState nav_state,MainViewDataState data_state){
+    if(0==nav_state.state || 1==nav_state.state){
+      return MainViewMenu2(nav_state, data_state);
     }
     return null;
   }
@@ -86,41 +94,19 @@ class MainView4 extends StatelessWidget {
     }
   }
 
-  void _on_change_date(BuildContext context,MainViewDataState data_state)async {
+  Widget? _gen_leading(MainViewNavState state){
+    if(null==state.user_data) {
 
-    final DateTime? datePicked = await showDatePicker(
-        context: context,
-        initialDate: data_state.target,
-        firstDate: DateTime(2003),
-        lastDate: DateTime(2100));
-    if (null != datePicked) {
-      data_state.set_target(DateTime(datePicked.year,datePicked.month,datePicked.day));
-      Navigator.pop(context);
-
-
+      return null;
+    }else{
+      return IconButton(onPressed: (){
+        switch (state.user_data) {
+          case CONFIG_MODE.CONFIG_ABOUT:
+          case CONFIG_MODE.CONFIG_CONVERT_MIZUHO_DIRECT_FORMAT:
+          case CONFIG_MODE.CONFIG_DATA:
+            state.user_data = null;
+        }
+      }, icon: Icon(Icons.arrow_left));
     }
-
-  }
-
-  void _show_need_sel_item_alert(BuildContext context){
-    showDialog(
-      context: context,
-      builder: (context) {
-        return SimpleDialog(
-          title: Text("項目を選択してください"),
-          children: <Widget>[
-            // コンテンツ領域
-            ElevatedButton(
-              child: Text('OK'),
-              onPressed: () => Navigator.of(context).pop(1),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-              ),
-            ),
-          ]
-          ,
-        );
-      },
-    );
   }
 }

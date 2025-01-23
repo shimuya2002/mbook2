@@ -60,7 +60,9 @@ class _EditTransactionState extends State<EditTransaction> {
     SizeConfig().init(context);
 
 
-    return Scaffold(
+    return PopScope(
+        canPop: false,
+        child:Scaffold(
         appBar: AppBar(
           // TRY THIS: Try changing the color here to a specific color (to
           // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
@@ -324,7 +326,7 @@ class _EditTransactionState extends State<EditTransaction> {
                       ])
 
 
-                ])));
+                ]))));
   }
 
 

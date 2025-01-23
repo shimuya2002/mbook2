@@ -13,8 +13,10 @@ class MainViewDataState with ChangeNotifier{
   late DateTime _target;
   late DateTimeRange _target_range;
   var _sel_list=[];
-  var _total_value=0.0;
 
+
+  Map<String,bool> _methods_show_flag={};
+  Map<String,bool> _usages_show_flag={};
   MainViewDataState(DateTime d){
 
     set_target(d);
@@ -54,7 +56,7 @@ class MainViewDataState with ChangeNotifier{
   }
 
   Future<List<Transaction>> get items=>_items;
-  double get total_value=>_total_value;
+
   void add_sel(int idx){
     _sel_list.add(idx);
     notifyListeners();
@@ -73,14 +75,21 @@ class MainViewDataState with ChangeNotifier{
   int get_sel(int idx){
     return this._sel_list[idx];
   }
+
   void reload(){
     _items = DataHelper().get_trans_list(
         _target_range.start,
         _target_range.end);
     _sel_list = [];
-    _total_value = 0;
     notifyListeners();
   }
   bool get is_sel_empty=>this._sel_list.isEmpty;
   int get sel_length=>this._sel_list.length;
+
+  Map<String,bool> get usages_show_flags=>this._usages_show_flag;
+  set usages_show_flags(Map<String,bool> flags){this._usages_show_flag=flags;}
+  Map<String,bool> get methods_show_flags=>this._methods_show_flag;
+  set method_show_flags(Map<String,bool> flags){this._methods_show_flag=flags;}
+
+
 }

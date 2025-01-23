@@ -144,6 +144,7 @@ class DataHelper{
        result=await db.getAllData() as List<mbook2.Transaction>;
       }
     }
+    result.sort((a,b)=>a.tDate.compareTo(b.tDate));
     return Future.value(result);
   }
 

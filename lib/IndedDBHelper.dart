@@ -83,8 +83,8 @@ class IndexdedDBHelper {
     var data = await dataStore.getAll();
     var result = List<mbook2.Transaction>.empty(growable: true);
 
-      for (var t in data) {
-        result.add(mbook2.Transaction.create_from_csv(t as String));
+    for (var t in data) {
+      result.add(mbook2.Transaction.create_from_csv(t as String));
     }
     await dataTxn.completed;
 

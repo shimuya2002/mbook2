@@ -37,12 +37,19 @@ class MainViewList extends StatelessWidget  {
                   outValue += t.get_value();
                 }
               }
+              var totalValue=0.0;
+              if(!_data.is_sel_empty){
+                for(var i=0;i < _data.sel_length;++i){
+                  totalValue+=snapshot!.data![_data.get_sel(i)].get_value();
+
+                }
+              }
               return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(0.0 == _data.total_value ?
+                    Text(_data.is_sel_empty?
                     "In $inValue Out ${outValue.abs()}" :
-                    "Total $this.items.total_value"
+                    "Total $totalValue"
                         , style: TextStyle(fontSize: 24)),
 
                     SizedBox(height: SizeConfig.blockSizeVertical * 70, child:
