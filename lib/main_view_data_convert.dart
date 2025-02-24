@@ -19,6 +19,7 @@ import 'size_config.dart';
 import 'package:mbook2/data_helper.dart';
 import 'transaction.dart';
 import 'package:provider/provider.dart';
+//import 'package:flutter_charset_detector/flutter_charset_detector.dart';
 class MainViewDataConvert extends StatelessWidget {
   static final _mizuho_date_fmt = DateFormat("yyyy.MM.dd");
 
@@ -80,9 +81,18 @@ class MainViewDataConvert extends StatelessWidget {
 
 
       var tranList = List<Transaction>.empty(growable: true);
-      final String str_data = kIsWeb
+      final conv_char_set=CONFIG_MODE.FORMAT_MIZUHO_DIRECT==(_state.user_data as CONFIG_MODE).param?
+      "Shift_JIS":
+      "UTF-8";
+      print("Convert charset type ${conv_char_set}");
+     final String str_data = kIsWeb
           ? await file.readAsString(encoding: utf8) :
-      (await CharsetConverter.decode("UTF-8", (await file.readAsBytes())));
+      (await CharsetConverter.decode(
+          conv_char_set, (await file.readAsBytes())));
+/*
+
+      final String str_data=await CharsetDetector.detect(await file.readAsBytes());*/
+      print("Convert complete.${str_data}");
       var rows = str_data.split("\n");
       for (var i = 13; i < rows.length; ++i) {
         var line = rows[i];
