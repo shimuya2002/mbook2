@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mbook2/app_body_state.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:mbook2/data_helper.dart';
-import 'edit_view.dart';
+
 class AppNavState with ChangeNotifier {
 
   var _cur_state = 0;

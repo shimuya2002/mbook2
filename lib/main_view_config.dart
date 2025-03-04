@@ -1,25 +1,7 @@
-import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:file_selector/file_selector.dart';
-import 'package:mbook2/main_view_data.dart';
 import 'package:mbook2/main_view_nav_state.dart';
-import 'dart:convert';
-import 'dart:io';
-import 'dart:io' as io;
-import "package:universal_html/html.dart" as html;
-import 'package:package_info_plus/package_info_plus.dart';
-
-import 'package:external_path/external_path.dart';
-
-import 'package:permission_handler/permission_handler.dart';
-import 'package:charset_converter/charset_converter.dart';
-import 'app_nav_state.dart';
 import 'size_config.dart';
-import 'package:mbook2/data_helper.dart';
-import 'transaction.dart';
-import 'package:provider/provider.dart';
-import 'main_view_data_convert.dart';
+import 'main_view_data.dart';
 enum CONFIG_MODE{
   CONFIG_DATA(""),
   CONFIG_CONVERT_MIZUHO_DIRECT_FORMAT(FORMAT_MIZUHO_DIRECT),
@@ -34,7 +16,8 @@ enum CONFIG_MODE{
 class MainViewConfig extends StatelessWidget {
 
   MainViewNavState _nav_state;
-  MainViewConfig(this._nav_state);
+  MainViewDataState _data_state;
+  MainViewConfig(this._nav_state,this._data_state);
   @override
   Widget build(BuildContext context) {
     return SizedBox(

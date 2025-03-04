@@ -1,14 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:mbook2/main_view_data.dart';
-import 'package:mbook2/main_view_title.dart';
 
 
-import 'transaction.dart';
-import 'edit_view.dart';
+
 import 'package:mbook2/data_helper.dart';
-import 'app_body_state.dart';
 import 'size_config.dart';
 
 class MainViewSearch extends StatefulWidget {

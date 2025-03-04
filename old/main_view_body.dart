@@ -8,12 +8,12 @@ import 'package:provider/provider.dart';
 
 
 
-import 'app_nav_state.dart';
+import '../lib/app_nav_state.dart';
 
-import 'list_data_state.dart';
-import 'config_state.dart';
-import 'main_view_config.dart';
-import 'main_view_list.dart';
+import '../lib/list_data_state.dart';
+import '../lib/config_state.dart';
+import '../lib/main_view_config.dart';
+import '../lib/main_view_list.dart';
 
 
 class MainViewBodyWidget extends StatelessWidget {
@@ -28,7 +28,7 @@ class MainViewBodyWidget extends StatelessWidget {
         }
 
         default:
-          return MainViewConfig(nav_state);
+          return MainViewConfig(nav_state,data_state);
 
       }
     });

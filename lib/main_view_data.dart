@@ -40,7 +40,7 @@ class MainViewDataState with ChangeNotifier{
     return _target_range;
   }
 
-  void _set_cur_date(DateTime d) {
+  void _set_cur_date(DateTime d) async{
     var ndate = DateTime(d.year, d.month, d.day);
 
 
@@ -52,7 +52,7 @@ class MainViewDataState with ChangeNotifier{
     _target = ndate;
 
 
-    reload();
+    await reload();
   }
 
   Future<List<Transaction>> get items=>_items;
@@ -76,12 +76,14 @@ class MainViewDataState with ChangeNotifier{
     return this._sel_list[idx];
   }
 
-  void reload(){
+  Future<List<Transaction>> reload() async{
     _items = DataHelper().get_trans_list(
         _target_range.start,
         _target_range.end);
     _sel_list = [];
+    print("reload");
     notifyListeners();
+    return _items;
   }
   bool get is_sel_empty=>this._sel_list.isEmpty;
   int get sel_length=>this._sel_list.length;

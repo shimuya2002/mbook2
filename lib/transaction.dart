@@ -157,7 +157,11 @@ class Transaction {
       t.method = params[2];
       t.usage = params[3];
       t._value = Currency.parse(params[4]);
-      t.note = params[5];
+      if(params.length>5) {
+        t.note = params[5];
+      }else{
+        t.note="";
+      }
       return t;
     }else{
       throw FormatException("Invalid format:$sourceString");

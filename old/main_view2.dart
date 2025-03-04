@@ -5,11 +5,11 @@ import 'package:mbook2/transaction.dart' as mbook2;
 import 'main_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'app_nav_state.dart';
-import 'size_config.dart';
+import '../lib/app_nav_state.dart';
+import '../lib/size_config.dart';
 import 'package:mbook2/data_helper.dart';
-import 'edit_view.dart';
-import 'list_data_state.dart';
+import '../lib/edit_view.dart';
+import '../lib/list_data_state.dart';
 class MainView2 extends StatefulWidget {
   const MainView2({super.key, required this.title});
 

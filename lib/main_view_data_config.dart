@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:file_selector/file_selector.dart';
+import 'package:mbook2/main_view_data.dart';
 import 'package:mbook2/main_view_nav_state.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -21,7 +22,8 @@ import 'package:provider/provider.dart';
 class MainViewDataConfig extends StatelessWidget {
   static final _mizuho_date_fmt=DateFormat("yyyy.MM.dd");
   MainViewNavState _nav_state;
-  MainViewDataConfig(this._nav_state);
+  MainViewDataState _data_state;
+  MainViewDataConfig(this._nav_state,this._data_state);
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -56,8 +58,8 @@ class MainViewDataConfig extends StatelessWidget {
             children: [Icon(Icons.clear), Text("Clear all data")],
 
           ),
-          onTap: () {
-            _on_clear_data(_nav_state);
+          onTap: () async{
+            await _on_clear_data(_nav_state);
           }
           ,)
       ],
@@ -217,9 +219,10 @@ class MainViewDataConfig extends StatelessWidget {
     nav_state.user_data=null;
   }
 
-  void _on_clear_data(MainViewNavState nav_state) {
+  Future<void> _on_clear_data(MainViewNavState nav_state) async{
     DataHelper().clear();
     nav_state.state=0;
     nav_state.user_data=null;
+    await _data_state.reload();
   }
 }

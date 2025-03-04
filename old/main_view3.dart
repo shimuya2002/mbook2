@@ -1,23 +1,23 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mbook2/app_body_state.dart';
-import 'package:mbook2/main_view_body.dart';
+import 'main_view_body.dart';
 import 'package:mbook2/main_view_config.dart';
 import 'package:mbook2/main_view_data.dart';
-import 'package:mbook2/main_view_nav_bar.dart';
+import 'main_view_nav_bar.dart';
 import 'package:mbook2/main_view_nav_state.dart';
-import 'package:mbook2/main_view_title.dart';
+import '../lib/main_view_title.dart';
 import 'package:mbook2/transaction.dart' as mbook2;
 import 'main_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'app_nav_state.dart';
-import 'main_view_list.dart';
-import 'size_config.dart';
+import '../lib/app_nav_state.dart';
+import '../lib/main_view_list.dart';
+import '../lib/size_config.dart';
 import 'package:mbook2/data_helper.dart';
-import 'edit_view.dart';
-import 'list_data_state.dart';
-import 'main_view_menu.dart';
+import '../lib/edit_view.dart';
+import '../lib/list_data_state.dart';
+import '../lib/main_view_menu.dart';
 
 class MainView3 extends StatefulWidget {
   const MainView3({super.key, required this.title});

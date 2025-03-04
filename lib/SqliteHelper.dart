@@ -89,10 +89,9 @@ class SqliteHelper{
         where:"$_moneybook_primary_key=?",
         whereArgs:[uuid]);
 
-    var  t=
-      cursor.isNotEmpty?
-      Transaction.create_from_csv(cursor[0][_value_key] as String):
-        null;
+    var  tstr=
+      cursor.isNotEmpty?cursor[0][_value_key] as String:'';
+    var t=tstr.length>2?  Transaction.create_from_csv(tstr.substring(1,tstr.length-2)):Transaction();
 
     return Future.value(t);
   }
@@ -194,7 +193,7 @@ class SqliteHelper{
 
     //Log.i("test",t.toString());
 
-    txn.insert(_moneybook_tbl_name,{_moneybook_primary_key:t.tid,_value_key:'"${t.toCSVString()}"'});
+    txn.insert(_moneybook_tbl_name,{_moneybook_primary_key:t.tid,_value_key:'"${t.toCSVString()}"'},conflictAlgorithm: sqflite.ConflictAlgorithm.replace);
     //Log.i("test",String.format("Insert result %d",r));
 
 

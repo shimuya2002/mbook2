@@ -8,7 +8,7 @@ import 'package:mbook2/transaction.dart' as mbook2;
 import 'package:mbook2/SqliteHelper.dart';
 
 import 'package:mbook2/IndedDBHelper.dart';
-import 'package:mbook2/FireStoreHelper.dart';
+//import '../old/FireStoreHelper.dart';
 class DataHelper{
   static final _instance=DataHelper._internal();
 
@@ -29,7 +29,7 @@ class DataHelper{
         }
 
         case mbook2.STORAGE_MODE.MODE_FIRESTORE:{
-          await FireStoreHelper().clearAllTransaction();
+          //await FireStoreHelper().clearAllTransaction();
         }
         case mbook2.STORAGE_MODE.MODE_INDEDEXDB:{
           await IndexdedDBHelper().clearAllTransaction();
@@ -62,7 +62,7 @@ class DataHelper{
           }
         case mbook2.STORAGE_MODE.MODE_FIRESTORE:
           {
-            methods=await FireStoreHelper().getMethods();
+            //methods=await FireStoreHelper().getMethods();
           }
         case mbook2.STORAGE_MODE.MODE_INDEDEXDB:
           {
@@ -96,7 +96,7 @@ class DataHelper{
           }
         case mbook2.STORAGE_MODE.MODE_FIRESTORE:
           {
-            usages = await FireStoreHelper().getUsages();
+            //usages = await FireStoreHelper().getUsages();
           }
         case mbook2.STORAGE_MODE.MODE_INDEDEXDB:
           {
@@ -130,7 +130,7 @@ class DataHelper{
             result.sort((a, b) => a.tDate.compareTo(b.tDate));
           }
         case mbook2.STORAGE_MODE.MODE_FIRESTORE:{
-          result=await FireStoreHelper().getAllData();
+          //result=await FireStoreHelper().getAllData();
 
 
         }
@@ -189,7 +189,7 @@ class DataHelper{
 
         case mbook2.STORAGE_MODE.MODE_FIRESTORE:
           {
-            result = await FireStoreHelper().getData(b, e);
+            //result = await FireStoreHelper().getData(b, e);
           }
         case mbook2.STORAGE_MODE.MODE_INDEDEXDB:
           {
@@ -298,10 +298,12 @@ class DataHelper{
       }
     }else {
       if (io.Platform.isAndroid) {
-
-        var db=SqliteHelper();
-        await db.setDataRange(tList as List<mbook2.Transaction>);
-
+        try {
+          var db = SqliteHelper();
+          await db.setDataRange(tList as List<mbook2.Transaction>);
+        } catch (err) {
+          print(err.toString());
+        }
       }
     }
 

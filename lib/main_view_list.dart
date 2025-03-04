@@ -24,6 +24,7 @@ class MainViewList extends StatelessWidget  {
   @override
   Widget build(BuildContext context) {
 
+
       return FutureBuilder(future: _data.items,
           builder: (BuildContext context,
               AsyncSnapshot<List<Transaction>> snapshot) {
@@ -85,8 +86,12 @@ class MainViewList extends StatelessWidget  {
         return EditTransaction(t, title: "");
       })).then((value) async{
         if (null != value) {
-          DataHelper().add(value);
-          data.set_target ((value as Transaction).tDate.toLocal());
+          try {
+            DataHelper().add(value);
+            data.set_target((value as Transaction).tDate.toLocal());
+          } catch (err) {
+            print(err.toString());
+          }
         }
       }
       );

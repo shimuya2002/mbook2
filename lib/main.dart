@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:mbook2/main_view_data.dart';
 import 'package:mbook2/main_view_nav_state.dart';
 import 'package:mbook2/transaction.dart' as mbook2;
-import 'main_view.dart';
-import 'package:firebase_core/firebase_core.dart';
+
+
 import 'main_view4.dart';
 import 'package:provider/provider.dart';
 void main() async{
   print("kISWeb=$kIsWeb");
   if(mbook2.STORAGE_MODE.MODE_FIRESTORE==mbook2.Transaction.storageMode) {
-    await Firebase.initializeApp();
+    //await Firebase.initializeApp();
   }
   runApp(const MyApp());
 }

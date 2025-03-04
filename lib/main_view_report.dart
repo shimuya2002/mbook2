@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
+//import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mbook2/main_view_data.dart';
-import 'package:mbook2/main_view_title.dart';
+import 'main_view_title.dart';
 
 
 import 'transaction.dart';

@@ -54,14 +54,14 @@ class MainViewBodyWidget2 extends StatelessWidget {
                 case CONFIG_MODE.CONFIG_ABOUT:{}
                   break;
                 case CONFIG_MODE.CONFIG_DATA:{
-                  return MainViewDataConfig(_nav_state);
+                  return MainViewDataConfig(_nav_state,_data_state);
                 }
                 case CONFIG_MODE.CONFIG_CONVERT_MIZUHO_DIRECT_FORMAT:{
                   return MainViewDataConvert(_nav_state);
                 }
               }
             }
-            return MainViewConfig(_nav_state);
+            return MainViewConfig(_nav_state,_data_state);
           }
       }
   }

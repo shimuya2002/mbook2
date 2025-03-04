@@ -4,7 +4,7 @@ import 'package:mbook2/main_view_nav_state.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:mbook2/data_helper.dart';
-import 'edit_view.dart';
+import '../lib/edit_view.dart';
 
 class MainViewNavBar extends StatelessWidget{
 

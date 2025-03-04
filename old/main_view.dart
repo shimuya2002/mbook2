@@ -8,9 +8,9 @@ import 'package:mbook2/data_helper.dart';
 
 
 
-import 'transaction.dart';
-import 'size_config.dart';
-import 'edit_view.dart';
+import '../lib/transaction.dart';
+import '../lib/size_config.dart';
+import '../lib/edit_view.dart';
 
 import 'package:file_selector/file_selector.dart';
 import 'dart:convert';
