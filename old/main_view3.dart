@@ -17,7 +17,7 @@ import '../lib/size_config.dart';
 import 'package:mbook2/data_helper.dart';
 import '../lib/edit_view.dart';
 import '../lib/list_data_state.dart';
-import '../lib/main_view_menu.dart';
+import 'main_view_menu.dart';
 
 class MainView3 extends StatefulWidget {
   const MainView3({super.key, required this.title});

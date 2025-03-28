@@ -1,4 +1,7 @@
 //import 'package:flutter/foundation.dart';
+import 'dart:collection';
+
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mbook2/main_view_data.dart';
@@ -18,10 +21,19 @@ class MainViewReport extends StatelessWidget {
   DateTimeRange _range;
   var _usage_value_tbl={};
   var _method_value_tbl={};
+  static final _pie_color_tbl=[
+    Colors.blue,
+    Colors.amber,
+    Colors.brown,
+    Colors.deepOrange,
+    Colors.deepPurple,
+
+  ];
   MainViewReport(this._range);
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return FutureBuilder(future: DataHelper().get_trans_list(_range.start, _range.end),
         builder: (BuildContext context,
             AsyncSnapshot<List<Transaction>> snapshot) {
@@ -58,17 +70,29 @@ class MainViewReport extends StatelessWidget {
 
             }
 
+
             return
                 SingleChildScrollView(
                 child: Column(
                 children: [
                   Text("${MainViewTitle.DAY_FMT.format(_range.start)}-${MainViewTitle.DAY_FMT.format(_range.end)}"),
                   Text("In $inValue Out ${outValue.abs()}"),
-                  Text("Methods categories"),
+
+
+                  Text("Usages categories"),
+                  SizedBox(
+                    width: SizeConfig.screenWidth,
+                    height: SizeConfig.screenHeight*0.3,
+                    child: _gen_pie_chart(_usage_value_tbl),),
                   Column(
                     children: usage_widget_tbl,
                   ),
-                  Text("Usages categories"),
+                  Text("Methods categories"),
+                  SizedBox(
+                    width: SizeConfig.screenWidth,
+                    height: SizeConfig.screenHeight*0.3,
+                    child: _gen_pie_chart(_method_value_tbl),),
+
                   Column(
                     children: method_widget_tbl,
                   ),
@@ -78,5 +102,21 @@ class MainViewReport extends StatelessWidget {
             return Spacer();
           }
         });
+  }
+
+  PieChart _gen_pie_chart(Map<dynamic,dynamic> data){
+
+    List<PieChartSectionData> sectors=[];
+    for(var k in data.keys){
+
+      sectors.add(PieChartSectionData(
+        color: _pie_color_tbl[sectors.length % _pie_color_tbl.length],
+        value: data[k],
+        title:k,
+        radius: 50,
+      ));
+    }
+
+    return PieChart(PieChartData(sections:sectors,centerSpaceRadius: 48.0));
   }
 }

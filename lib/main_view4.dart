@@ -1,17 +1,15 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mbook2/app_body_state.dart';
+
 import 'package:mbook2/main_view_body2.dart';
 import 'package:mbook2/main_view_config.dart';
 import 'package:mbook2/main_view_data.dart';
 import 'package:mbook2/main_view_nav_bar2.dart';
 import 'package:mbook2/main_view_nav_state.dart';
 import 'package:mbook2/main_view_title2.dart';
-import 'package:mbook2/transaction.dart' as mbook2;
-//import '../old/main_view.dart';
-import 'package:firebase_core/firebase_core.dart';
+
+
 import 'package:provider/provider.dart';
-import 'app_nav_state.dart';
+
 
 import 'size_config.dart';
 import 'package:mbook2/data_helper.dart';
